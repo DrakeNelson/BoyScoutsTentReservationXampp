@@ -1,0 +1,168 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+	<head id="Head1"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>
+	Tent Manager
+		</title>
+		<link href="examplecss.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="form-basic.css">
+		<script type="text/javascript">
+
+		</script>
+	</head>
+
+		<body>
+			<div id="wrapper">
+				<br />
+
+				<div id="wrapper-header">
+					<div id="logo">
+						<a id="header_0_LogoHyperLink" href="http:\\www.google.com"><img id="header_0_JamboreeLogoImage" title="Jamboree" src="jamboreelogo.jpg" style="border-width:0px;" /></a>
+						<a id="header_2_LogoHyperLink" href="http:\\www.google.com"><img id="header_2_BSALogoImage" title="BSA" src="BSA_Title_Logo.jpg" style="border-width:0px;float: right" /></a>
+					</div>
+				</div>
+
+				<div id="wrapper-nav">
+					<div class="nav">
+						<ul>
+
+							<li><a id="header_1_rptItems_ctl00_lnkItem" href="Form_Test_1.php">Tent Request</a></li>
+							<li><a id="header_1_rptItems_ctl01_lnkItem" href="Form_Test_1.php">Admin</a></li>
+						</ul>
+					</div>
+				</div>
+				<div id="wrapper-body">
+					<div id="left-column">
+						<div id="left-element" class="left-element">
+
+							<h3><a id="leftcolumn_0_SectionHeaderHyperLink" href="/Home/BrandGuide.aspx">SideBar</a></h3>
+
+							<ul>
+								<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="">Item</a>
+
+								<br />
+							</ul>
+
+							<ul>
+								<a id="leftcolumn_0_CategoryRepeater_ctl01_CategoryHyperLink" href="">Item</a>
+
+								<br />
+							</ul>
+
+							<ul>
+								<a id="leftcolumn_0_CategoryRepeater_ctl02_CategoryHyperLink" href="">Item</a>
+
+								<br />
+							</ul>
+							<ul>
+								<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="">Item</a>
+
+								<br />
+							</ul>
+
+							<ul>
+								<a id="leftcolumn_0_CategoryRepeater_ctl01_CategoryHyperLink" href="">Item</a>
+
+								<br />
+							</ul>
+
+							<ul>
+								<a id="leftcolumn_0_CategoryRepeater_ctl02_CategoryHyperLink" href="">Item</a>
+
+								<br />
+							</ul>
+							<ul>
+								<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="">Item</a>
+
+								<br />
+							</ul>
+
+							<ul>
+								<a id="leftcolumn_0_CategoryRepeater_ctl01_CategoryHyperLink" href="">Item</a>
+
+								<br />
+							</ul>
+
+							<ul>
+								<a id="leftcolumn_0_CategoryRepeater_ctl02_CategoryHyperLink" href="">Item</a>
+
+								<br />
+							</ul>
+
+
+						</div>
+					</div>
+					<div id="middle-2columnLEFT">
+						<div id="breadcrumb">Boy Scouts of America ~ National Jamboree
+						</div>
+						<div id="middle-element">
+							<h1>
+							Tent Request Form
+							</h1>
+							<p>
+								<h2>Fill out this Form to Request Tent Mates.</h2>	
+								<p>Please ensure that all BSA IDs are accurate or the form will be deemed invalid</p>
+								<form class="form-login" method="post" action="#">
+
+            <div class="form-log-in-with-email">
+
+                <div class="form-white-background">
+
+                    <div class="form-title-row">
+                        <h1>Log in</h1>
+                    </div>
+
+                    <div class="form-row">
+                        <label>
+                            <span>Email</span>
+                            <input type="email" name="email">
+                        </label>
+                    </div>
+
+                    <div class="form-row">
+                        <label>
+                            <span>Password</span>
+                            <input type="password" name="password">
+                        </label>
+                    </div>
+
+                    <div class="form-row">
+                        <button type="submit">Log in</button>
+                    </div>
+
+                </div>
+
+                <a href="#" class="form-forgotten-password">Forgotten password &middot;</a>
+                <a href="#" class="form-create-an-account">Create an account &rarr;</a>
+
+            </div>
+
+            <div class="form-sign-in-with-social">
+
+                <div class="form-row form-title-row">
+                    <span class="form-title">Sign in with</span>
+                </div>
+
+                <a href="#" class="form-google-button">Google</a>
+                <a href="#" class="form-facebook-button">Facebook</a>
+                <a href="#" class="form-twitter-button">Twitter</a>
+
+            </div>
+
+        </form>
+							</p>
+						</div>
+					</div>
+				</div>
+				<div id="footer">
+					<div>
+						<ul id="footer-nav"><li><a id="footer_0_FooterLinksRepeater_ctl01_FooterHyperLink" href="http:\\www.google.com" target="_top">About</a></li><li><a id="footer_0_FooterLinksRepeater_ctl02_FooterHyperLink" href="http:\\www.google.com" target="_top">Careers</a></li><li><a id="footer_0_FooterLinksRepeater_ctl03_FooterHyperLink" target="_top">Licensing and Trademark</a></li><li><a id="footer_0_FooterLinksRepeater_ctl04_FooterHyperLink" href="http:\\www.google.com" target="_top">Privacy</a></li><li><a id="footer_0_FooterLinksRepeater_ctl05_FooterHyperLink" href="/TermsAndConditions.aspx" target="_top">Terms</a></li><li><a id="footer_0_FooterLinksRepeater_ctl06_FooterHyperLink" href="http:\\www.google.com" target="_top">Sitemap</a></li></ul>
+					</div>
+					<h3 id="footer_0_FooterCopyright">&copy; 2016 Boy Scouts of America - All Rights Reserved</h3>
+				</div>
+
+			</div>
+			</script>
+	</body>
+</html>
