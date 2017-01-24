@@ -1,19 +1,30 @@
 <?php
-$BsaId = $_POST["bsaid"];
-$JamId = $_POST["jamid"];
+$BsaId     = $_POST["bsaid"];
 $FirstName = $_POST["fname"];
-$LastName = $_POST["lname"];
-$Email = $_POST["email"];
-$Gname = $_POST["gname"];
+$LastName  = $_POST["lname"];
+$Email     = $_POST["email"];
+$Gname     = $_POST["gname"];
+$Gender    = $_POST["Gender"];
+$BirthDate = $_POST["dob"];
 $Teammate1 = $_POST["mate1"];
 $Teammate2 = $_POST["mate2"];
 $Teammate3 = $_POST["mate3"];
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "boyscoutdatabase";
-$validityChecker = false;
+require_once 'login.php';
+$validityChecker = true;
 $failString = "";
+
+$teammateExist1=false;
+$teammateExist2=false;
+$teammateExist3=false;
+if($Teammate1!=null){
+	$teammateExist1=true;
+}
+if($Teammate2!=null){
+	$teammateExist2=true;
+}
+if($Teammate3!=null){
+	$teammateExist3=true;
+}
 
 // Create connection
 $conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -22,78 +33,49 @@ $conn = mysqli_connect($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-echo "Connected successfully";
+//echo "Connected successfully";
+if($teammateExist1){
+	$duplicateQueryString = "SELECT BSAID FROM usergroup WHERE BSAID LIKE '$Teammate1'";
+	$legitimateQueryString ="SELECT BSAMemberNumber FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate1'"; 
+	$resultDupe  = mysqli_query($conn, $duplicateQueryString);
+	$resultLegit = mysqli_query($conn, $legitimateQueryString);
 
-$queryString = "SELECT BSAMemberNumber FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$BsaId'";
-$result = mysqli_query($conn, $queryString);
+	if ($resultLegit ->fetch_object()==null){
+		$validityChecker=false;
+		$failString = "Pref Teammate #1 BSAID is invalid";
+	} else if($resultDupe->fetch_object()!=null) {
+		$validityChecker=false;
+		$failString = "Pref Teammate #1 BSAID is already in another team";
+	}
+}
 
-if (!$result->fetch_object()->BSAMemberNumber) {
-    $failString = "Fail at main user";
-    header('Location: index.php');
-    exit();
-} else {
-    echo "Main User exists in the reference table\n";
-    $queryString = "SELECT BSAMemberNumber FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate2'";
-    $result = mysqli_query($conn, $queryString);
+if($teammateExist2){
+	$duplicateQueryString = "SELECT BSAID FROM usergroup WHERE BSAID LIKE '$Teammate2'";
+	$legitimateQueryString ="SELECT BSAMemberNumber FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate2'"; 
+	$resultDupe  = mysqli_query($conn, $duplicateQueryString);
+	$resultLegit = mysqli_query($conn, $legitimateQueryString);
+	if ($resultLegit ->fetch_object()==null){
+		$validityChecker=false;
+		$failString = "Pref Teammate #2 BSAID is invalid";
+	} else if($resultDupe->fetch_object()!=null) {
+		$validityChecker=false;
+		$failString = "Pref Teammate #2 BSAID is already in another team";
+	}
+}
 
-    if (!$result->fetch_object()->BSAMemberNumber) {
-        echo "Fail at Teammate 2\n";
-        $failString = "Fail at Teammate 2";
-    } else {
-        echo "User 2 exists in the reference table\n";
-        $queryString = "SELECT BSAMemberNumber FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate3'";
-        $result = mysqli_query($conn, $queryString);
+if($teammateExist3){
+	$duplicateQueryString = "SELECT BSAID FROM usergroup WHERE BSAID LIKE '$Teammate3'";
+	$legitimateQueryString ="SELECT BSAMemberNumber FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate3'"; 
+	$resultDupe  = mysqli_query($conn, $duplicateQueryString);
+	$resultLegit = mysqli_query($conn, $legitimateQueryString);
 
-        if (!$result->fetch_object()->BSAMemberNumber) {
-            echo "Fail at Teammate 3";
-            $failString = "Fail at Teammate 3";
-        } else {
-            echo "User 3 exists in the reference table\n";
-            $queryString = "SELECT BSAMemberNumber FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate1'";
-            $result = mysqli_query($conn, $queryString);
-
-            if (!$result->fetch_object()->BSAMemberNumber) {
-                echo "Fail at Teammate 1";
-                $failString = "Fail at Teammate 1";
-            } else {
-                echo "User 1 exists in the reference table\n";
-                echo "all users pass test Creating Group";
-
-                $queryString = "SELECT groupid FROM staffgroups WHERE groupname LIKE '$Gname'";
-                $result = mysqli_query($conn, $queryString);
-
-                if (!$result->fetch_object()->groupid) {
-                    $insertString = "INSERT INTO staffgroups (groupid,tentid) VALUES('$Gname',0) ";
-                    if ($conn->query($insertString) === TRUE) {
-                        echo "New group created successfully";
-                        $insertString = "INSERT INTO usergroup (groupid,JAMID) VALUES('$Gname',$BsaId) ";
-                        if ($conn->query($insertString) === TRUE) {
-                            echo "user added to group";
-                        }
-                        $insertString = "INSERT INTO usergroup (groupid,JAMID) VALUES('$Gname',$Teammate3) ";
-                        if ($conn->query($insertString) === TRUE) {
-                            echo "user added to group";
-                        }
-                        $insertString = "INSERT INTO usergroup (groupid,JAMID) VALUES('$Gname',$Teammate2) ";
-                        if ($conn->query($insertString) === TRUE) {
-                            echo "user added to group";
-                        }
-                        $insertString = "INSERT INTO usergroup (groupid,JAMID) VALUES('$Gname',$Teammate1) ";
-                        if ($conn->query($insertString) === TRUE) {
-                            echo "user added to group";
-                        }
-                        $validityChecker = true;
-                    } else {
-                        echo "Error: " . $insertString . "<br>" . $conn->error;
-                        $failString = "Error: " . $insertString . "<br>" . $conn->error;
-                    }
-                } else {
-                    echo "fail at group name not unique";
-                    $failString = "fail at group name not unique";
-                }
-            }
-        }
-    }
+	if ($resultLegit ->fetch_object()==null){
+		$validityChecker=false;
+		$failString = "Pref Teammate #3 BSAID is invalid";
+	} else if($resultDupe->fetch_object()!=null) {
+		$validityChecker=false;
+		$failString = "Pref Teammate #3 BSAID is already in another team";
+	}
 }
 
 $conn->close();
@@ -136,7 +118,7 @@ $conn->close();
             <ul>
 
                 <li><a id="header_1_rptItems_ctl00_lnkItem" href="index.php">Tent Request</a></li>
-                <li><a id="header_1_rptItems_ctl01_lnkItem" href="admin.html">Admin</a></li>
+                <li><a id="header_1_rptItems_ctl01_lnkItem" href="admin.php">Admin</a></li>
             </ul>
         </div>
     </div>
@@ -155,15 +137,20 @@ $conn->close();
                     <p>You will recieve an email at <?php echo $Email ?> when your request has been processed.</p>
                     <p>You have requested the following members to tent with:
                     <ul>
-                        <li><?php echo $BsaId ?> </li>
-                        <li><?php echo $Teammate1 ?> </li>
-                        <li><?php echo $Teammate2 ?> </li>
-                        <li><?php echo $Teammate3 ?> </li>
+                        
+						<li><?php echo $BsaId ?> </li>
+                        <?php if($teammateExist1): ?>
+						<li><?php echo $Teammate1; ?> </li>
+						<?php endif; if($teammateExist2): ?>
+                        <li><?php echo $Teammate2; ?> </li>
+						<?php endif; if($teammateExist3): ?>
+                        <li><?php echo $Teammate3; ?> </li>
+						<?php endif; ?>
                     </ul>
                     </p>
                     </p>
                 <?php else: ?>
-                    <h1> YOU FAIL </h1><?php echo $failString; ?>
+                    <h1> Please navigate back and correct the following error: </h1><?php echo $failString; ?>
                 <?php endif; ?>
             </div>
         </div>
@@ -175,5 +162,5 @@ $conn->close();
 
 </div>
 </body>
-< / html >
+</html>
 						

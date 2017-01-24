@@ -1,0 +1,22 @@
+issues
+-need a list of tents
+-need a list of staffers:
+	-BSA ID
+	-Jamboree ID
+	-Gender
+	-BirthDates
+	-Job Code
+	-First Name
+	-Last Name
+	-Email
+
+
+plans 12/1/2016
+-look into moving tent manager form to main page
+-change jamboree logo
+-add remove field to tent manager
+-add subtitles and instructions
+-build algorith to assign all members to tents
+-rebuild group tent request
+DONE-add security to admin logon
+DONE-prevent sql inject

@@ -1,11 +1,15 @@
 <?php
-$email = "root";
-$password = "";
-$dbname = "boyscoutdatabase";
-$servername = "localhost";
-$checker = 1;
+require_once 'login.php';
+$email = $username;
+session_start();
+if(isset($_SESSION['checker'])){
+	$checker=$_SESSION['checker'];
+}
+if($checker!=1){
+	header('Location: admin.php');
+	exit();
+}
 
-//echo $email.$password;
 
 // Create connection
 $conn = mysqli_connect($servername, $email, $password, $dbname);
@@ -15,10 +19,6 @@ if ($conn->connect_error) {
 } else {
 //echo "Connected successfully";
 }
-
-$sql = "SELECT groupid, tentid, IsApproved,groupname FROM staffgroups";
-
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -53,10 +53,9 @@ $sql = "SELECT groupid, tentid, IsApproved,groupname FROM staffgroups";
     <div id="wrapper-nav">
         <div class="nav">
             <ul>
-
                 <li><a id="header_1_rptItems_ctl00_lnkItem" href="index.php">Tent Request</a></li>
-                <li><a id="header_1_rptItems_ctl01_lnkItem"
-                       href="adminSignOn.php?checker=<?php echo $checker ?>">Admin</a></li>
+                <li><a id="header_1_rptItems_ctl01_lnkItem" href="adminSignOn.php?checker=<?php echo $checker ?>">Admin</a></li>
+				<li><a id="header_1_rptItems_ctl02_lnkItem" href="endsession.php">Log Out</a></li>
             </ul>
         </div>
     </div>
@@ -66,11 +65,14 @@ $sql = "SELECT groupid, tentid, IsApproved,groupname FROM staffgroups";
 
                 <h3><a id="leftcolumn_0_SectionHeaderHyperLink" href="/Home/BrandGuide.aspx">SideBar</a></h3>
 
-                <ul>
-                    <a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="">Item</a>
-
-                    <br/>
-                </ul>
+				<ul>
+					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminGroupReport.php">Group Report</a>
+					<br />
+				</ul>
+				<ul>
+					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminTentReport.php">Tent Report</a>
+					<br />
+				</ul>
 
             </div>
         </div>
@@ -82,7 +84,7 @@ $sql = "SELECT groupid, tentid, IsApproved,groupname FROM staffgroups";
                     Administration
                 </h1>
                 <p>
-                <h2>Logged In as Tent Manager</h2>
+                <h2>DO NOT USE THIS AT ALL </h2>
                 <table class="container">
                     <thead>
                     <tr>
@@ -95,40 +97,43 @@ $sql = "SELECT groupid, tentid, IsApproved,groupname FROM staffgroups";
                     </thead>
                     <tbody>
                     <?php
+					$sql = "SELECT groupid, tentid, IsApproved,groupname FROM staffgroups";
+
                     if ($result = mysqli_query($conn, $sql)) {
                         while ($row = mysqli_fetch_row($result)) { ?>
                             <tr>
                                 <td><?php echo $row[0] ?></td>
                                 <td>
                                     <?php
-                                    $sqlTwo = "SELECT JAMID FROM usergroup where groupid like '$row[3]'";
-                                    if ($resultTwo = mysqli_query($conn, $sqlTwo)) {
-                                        while ($rowTwo = mysqli_fetch_row($resultTwo)) {
-                                            $sqlThree = "SELECT FirstName, LastName FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$rowTwo[0]'";
-                                            if ($resultThree = mysqli_query($conn, $sqlThree)) {
-                                                while ($rowThree = mysqli_fetch_row($resultThree)) {
-                                                    echo $rowThree[0] . " " . $rowThree[1] . "<br>";
-                                                }
-                                            }
-                                        }
-                                    }
-                                    ?></td>
+										$sqlTwo = "SELECT importedstafferinfotable.FirstName, importedstafferinfotable.LastName 
+													FROM importedstafferinfotable JOIN usergroup ON usergroup.BSAID = importedstafferinfotable.BSAMemberNumber 
+													WHERE usergroup.groupid like '$row[3]'";
+										if ($resultTwo = mysqli_query($conn, $sqlTwo)) {
+											while ($rowTwo = mysqli_fetch_row($resultTwo)) {
+												echo $rowTwo[0] . " " . $rowTwo[1] . "<br>";
+											}
+										}
+                                    ?>
+								</td>
                                 <td><?php echo $row[1] ?></td>
                                 <td><?php if ($row[2] == 0) {
                                         echo "No";
                                     } else {
                                         echo "Yes";
-                                    } ?></td>
-                                '
+                                    } ?>
+								</td>
                                 <td>
+								<?php if ($row[2] == 0) { ?>
                                     <form action="http://google.com">
                                         <input type="submit" value="Assign"/>
                                     </form>
+									<?php }?>
                                 </td>
                             </tr>
                             <?php
                         }
                         mysqli_free_result($result);
+                        mysqli_free_result($resultTwo);
                     }
                     ?>
 
@@ -145,4 +150,4 @@ $sql = "SELECT groupid, tentid, IsApproved,groupname FROM staffgroups";
 
 </div>
 </body >
-< / html >
+</html>

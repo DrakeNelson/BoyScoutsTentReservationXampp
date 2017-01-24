@@ -1,57 +1,41 @@
 <?php
-$checker = $_REQUEST['checker'];
+$validator = 0;
+require_once 'login.php';
+$checker=0;
+session_start();
+ini_set('session.use_only_cookies',1);
+if(isset($_SESSION['checker'])){
+	$checker=$_SESSION['checker'];
+}
 if($checker==1){
-	$email = "root";
-	$password = "";
+	$validator=1;
 }else{
-	$email 					= $_POST["email"];
-	$password 				= $_POST["password"];
+	$user 		= $_POST["email"];
+	$pw 		= $_POST["password"];
+	
+	$conn = mysqli_connect($servername, $username, $password, $dbname);
+	if ($conn->connect_error) {
+		die("Connection failed: " . $conn->connect_error);
+	}
+	$sql = "SELECT * FROM admin WHERE AdminName = '$user'";
+	if ($result = mysqli_query($conn, $sql)) {
+		while ($row = mysqli_fetch_row($result)) { 
+			$token = hash('ripemd128',"$pw");
+			if($token==$row[1]){
+				$validator=1;
+			}
+		}
+		mysqli_free_result($result);
+	}
 }
-if($email!="root"){
-	header('Location: admin.html');
+if($validator==0){
+	header('Location: endsession.php');
 	exit();
+}else{
+	$_SESSION['checker']=1;
 }
-
-//$dbname 				= "boyscoutdatabase";
-//$servername 			= "localhost";
-
-
-
-//echo $email.$password;
-
-// Create connection
-//$conn = mysqli_connect($servername, $email, $password,$dbname);
-//// Check connection
-//if ($conn->connect_error) {
-//    die("Connection failed: " . $conn->connect_error);
-//} else{
-////echo "Connected successfully";
-//}
-
-//$sql="SELECT groupid,groupname, tentid, IsApproved FROM staffgroups";
-
-//if ($result=mysqli_query($conn,$sql))
-//  {
-//  // Fetch one and one row
-//  while ($row=mysqli_fetch_row($result))
-//    {
-//    printf ("%s (%s) (%s)\n",$row[0],$row[1], $row[2]);
-//    }
-//  // Free result set
-//  mysqli_free_result($result);
-//}
-
-//mysqli_close($conn);
-
-
-//$queryString = "SELECT AdminName, Password FROM admin";
-//$result = mysqli_query($conn,$queryString);
-//
-//if($result->fetch_object()->AdminName){
-//	echo "test passed";
-//}
-$checker = 1;
 ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" >
@@ -83,6 +67,7 @@ $checker = 1;
 
 							<li><a id="header_1_rptItems_ctl00_lnkItem" href="index.php">Tent Request</a></li>
 							<li><a id="header_1_rptItems_ctl01_lnkItem" href="adminSignOn.php?checker=<?php echo $checker ?>">Admin</a></li>
+							<li><a id="header_1_rptItems_ctl02_lnkItem" href="endsession.php">Log Out</a></li>
 						</ul>
 					</div>
 				</div>
@@ -91,19 +76,14 @@ $checker = 1;
 						<div id="left-element" class="left-element">
 
 							<h3><a id="leftcolumn_0_SectionHeaderHyperLink" href="/Home/BrandGuide.aspx">SideBar</a></h3>
-
 							<ul>
 								<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminGroupReport.php">Group Report</a>
-
 								<br />
 							</ul>
-
 							<ul>
-								<a id="leftcolumn_0_CategoryRepeater_ctl01_CategoryHyperLink" href="">Item</a>
-
+								<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminTentReport.php">Tent Report</a>
 								<br />
-							</ul>
-							
+							</ul>							
 						</div>
 					</div>
 					<div id="middle-2columnLEFT">
