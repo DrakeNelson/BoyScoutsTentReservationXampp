@@ -46,12 +46,9 @@ if ($conn->connect_error) {
 
     <div id="wrapper-header">
         <div id="logo">
-            <a id="header_0_LogoHyperLink" href="http://www.summitbsa.org/events/jamboree/jamboree-registration/"><img
-                    id="header_0_JamboreeLogoImage" title="Jamboree" src="jamboreelogo.jpg" style="border-width:0px;"/></a>
-            <a id="header_2_LogoHyperLink" href="http://www.scouting.org/"><img id="header_2_BSALogoImage" title="BSA"
-                                                                                src="BSA_Title_Logo.jpg"
-                                                                                style="border-width:0px;float: right"/></a>
-        </div>
+			<a id="header_0_LogoHyperLink" href="http://www.summitbsa.org/events/jamboree/overview/"><img id="header_0_JamboreeLogoImage" title="Jamboree" src="jamboreeLogoNew.jpg" style="border-width:0px;" /></a>
+			<a id="header_2_LogoHyperLink" href="http://www.scouting.org/"><img id="header_2_BSALogoImage" title="BSA" src="BSA_Title_Logo.jpg" style="border-width:0px;float: right" /></a>
+		</div>
     </div>
 
     <div id="wrapper-nav">
@@ -69,9 +66,12 @@ if ($conn->connect_error) {
             <div id="left-element" class="left-element">
 
                 <h3><a id="leftcolumn_0_SectionHeaderHyperLink" href="/Home/BrandGuide.aspx">SideBar</a></h3>
-
 				<ul>
-					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminGroupReport.php">Group Report</a>
+					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminSignOn.php">Admin Home</a>
+					<br />
+				</ul>
+				<ul>
+					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminUpdateUsers.php">Update Users</a>
 					<br />
 				</ul>
 				<ul>
@@ -98,6 +98,7 @@ if ($conn->connect_error) {
                         <th><h1 style="color:#ddeeff;">Is Full?</h1></th>
                         <th><h1 style="color:#ddeeff;">Group Members</h1></th>
                         <th><h1 style="color:#ddeeff;">Assign Group</h1></th>
+						<th><h1 style="color:#ddeeff;">Remove A Member</h1></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -139,11 +140,22 @@ if ($conn->connect_error) {
 								</td>
                                 <td>
 									<?php if ($row[2] == 0) { ?>
-                                    <button onclick="myFunction(value)" value = <?php echo $row[0] ?>>Assign</button>
+                                    <button onclick="assignFunction(value)" value = <?php echo $row[0] ?>>Assign</button>
 									<script>
 										var myWindow;
-										function myFunction(value) {
+										function assignFunction(value) {
 											myWindow = window.open("grouptableassigner.php?tentid="+value, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=900,height=900");
+										}
+									</script>
+									<?php }?>
+                                </td>
+								<td>
+									<?php if ($row[1] != 0) { ?>
+                                    <button onclick="removeFunction(value)" value = <?php echo $row[0] ?>>Remove</button>
+									<script>
+										var myWindow;
+										function removeFunction(value) {
+											myWindow = window.open("groupTableRemover.php?tentid="+value, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=900,height=900");
 										}
 									</script>
 									<?php }?>

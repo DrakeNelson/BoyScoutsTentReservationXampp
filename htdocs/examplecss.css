@@ -103,7 +103,8 @@ ul
 
 #wrapper-header
 {
-    height: 85px;
+	padding: 10px
+    height: 100px;
     width: 940px;
 }
 
@@ -180,99 +181,8 @@ ul
 #logo
 {
     float: center;
-    height: 85px;
+    height: 100px;
     padding: 0 0 0 10px;
-}
-
-#patch
-{
-    float: left;
-    width: 175px;
-    height: 85px;
-}
-
-#login-search
-{
-    width: 240px;
-    float: right;
-    height: 85px;
-}
-
-.login
-{
-    font-size: 16px;
-    text-transform: uppercase;
-    color: #1f4361;
-    font-weight: 700;
-    text-decoration: none;
-    line-height: 16px;
-}
-
-#login-search h6 a
-{
-    color: #005696;
-    text-decoration: none;
-    text-transform: uppercase;
-    line-height: 16px;
-}
-
-#login-search p
-{
-    font-size: 11px;
-    color: #737373;
-    padding: 0;
-}
-
-#login-search a:hover
-{
-    color: #003060;
-    text-decoration: underline;
-}
-
-#search_box
-{
-    width: 240px;
-    height: 35px;
-    background: #fff;
-}
-
-#search_box #s, #search_box .search_textbox
-{
-    background: #e1e1e1 none repeat scroll 0 0;
-    border: Solid 1px #a9a9a9;
-    float: left;
-    height: 17px;
-    width: 130px;
-    color: #737373;
-    margin: 6px 0 0;
-    padding: 3px 0 0 5px;
-}
-
-#search_box #go, #search_box .search_button
-{
-    float: none;
-    margin: 6px 4px 0 8px;
-}
-
-#search_box #search_form .search_link
-{
-    color: #FFFFFF;
-    display: block;
-    width: 200px;
-    height: 25px;
-    font-weight: bold;
-    /*font-size: 14px;*/
-    background-color: #005696; 
-    text-align: center;
-    vertical-align: middle;
-    padding-top: 10px;
-}
-
-#search_box #search_form a.search_link:hover
-{
-    text-decoration: none;
-    color: #005696;
-    background-color: #91b6d2;
 }
 /* Top Nav
 ---------------------------------------------------------------------------*/

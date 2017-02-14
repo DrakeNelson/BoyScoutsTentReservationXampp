@@ -2,16 +2,16 @@
 $BsaId  = $_POST["bsaid"];
 $JamId  = $_POST["jamid"];
 require_once 'login.php';
-$dob    = (new \DateTime())->format('Y-m-d');
 $gender = "";
-$conn   = mysqli_connect($servername, $username, $password, $dbname);
+
+$conn   = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 $statusString = "";
-$queryString = "SELECT BSAMemberNumber, RegCode, Gender, FirstName, LastName,DateOfBirth, Email FROM importedstafferinfotable WHERE BSAMemberNumber = '$BsaId' AND RegCode = '$JamId'";
-$result = mysqli_query($conn, $queryString);
-if (!$result->fetch_object()->BSAMemberNumber) {
+$queryString = "SELECT BSAMemberNumber, RegCode, Gender, FirstName, LastName, AttendeeType, Email FROM importedstafferinfotable WHERE BSAMemberNumber = '$BsaId' AND RegCode = '$JamId'";
+$result =$conn->query($queryString);
+if (!$result->num_rows > 0) {
     $failString = "Fail at main user";
     header('Location: index.php');
     exit();
@@ -47,8 +47,8 @@ $conn->close();
 
 				<div id="wrapper-header">
 					<div id="logo">
-						<a id="header_0_LogoHyperLink" href="http:\\www.google.com"><img id="header_0_JamboreeLogoImage" title="Jamboree" src="jamboreelogo.jpg" style="border-width:0px;" /></a>
-						<a id="header_2_LogoHyperLink" href="http:\\www.google.com"><img id="header_2_BSALogoImage" title="BSA" src="BSA_Title_Logo.jpg" style="border-width:0px;float: right" /></a>
+						<a id="header_0_LogoHyperLink" href="http://www.summitbsa.org/events/jamboree/overview/"><img id="header_0_JamboreeLogoImage" title="Jamboree" src="jamboreeLogoNew.jpg" style="border-width:0px;" /></a>
+						<a id="header_2_LogoHyperLink" href="http://www.scouting.org/"><img id="header_2_BSALogoImage" title="BSA" src="BSA_Title_Logo.jpg" style="border-width:0px;float: right" /></a>
 					</div>
 				</div>
 
@@ -104,7 +104,7 @@ $conn->close();
 									</div>
 									<div class="form-row">
 										<label>
-											<span>DOB:</span>
+											<span>Staff Type:</span>
 											<input type="text" name="dob" id="dob" value=<?php echo $dob;?> readonly>                
 										</label>
 									</div>

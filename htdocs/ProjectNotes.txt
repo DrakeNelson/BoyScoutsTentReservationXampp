@@ -11,12 +11,18 @@ issues
 	-Email
 
 
-plans 12/1/2016
--look into moving tent manager form to main page
--change jamboree logo
+plans:
+
+-make better landing page for admin
 -add remove field to tent manager
 -add subtitles and instructions
 -build algorith to assign all members to tents
--rebuild group tent request
+-fix group tent request
+-improve usability and user friendliness
+-message when data invalid
+-remove bsa id
+-emailer
 DONE-add security to admin logon
 DONE-prevent sql inject
+DONE-redesign tent request
+DONE-change jamboree logo

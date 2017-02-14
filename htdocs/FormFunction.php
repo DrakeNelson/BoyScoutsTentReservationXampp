@@ -13,6 +13,7 @@ require_once 'login.php';
 $validityChecker = true;
 $failString = "";
 
+
 $teammateExist1=false;
 $teammateExist2=false;
 $teammateExist3=false;
@@ -27,19 +28,20 @@ if($Teammate3!=null){
 }
 
 // Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-//echo "Connected successfully";
+
 if($teammateExist1){
 	$duplicateQueryString = "SELECT BSAID FROM usergroup WHERE BSAID LIKE '$Teammate1'";
 	$legitimateQueryString ="SELECT BSAMemberNumber FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate1'"; 
-	$resultDupe  = mysqli_query($conn, $duplicateQueryString);
-	$resultLegit = mysqli_query($conn, $legitimateQueryString);
-
+	$resultDupe  = $conn->query($duplicateQueryString);
+	$resultLegit = $conn->query($legitimateQueryString);
+//also needs to check gender
+//also needs to check AttendeeType
 	if ($resultLegit ->fetch_object()==null){
 		$validityChecker=false;
 		$failString = "Pref Teammate #1 BSAID is invalid";
@@ -52,8 +54,8 @@ if($teammateExist1){
 if($teammateExist2){
 	$duplicateQueryString = "SELECT BSAID FROM usergroup WHERE BSAID LIKE '$Teammate2'";
 	$legitimateQueryString ="SELECT BSAMemberNumber FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate2'"; 
-	$resultDupe  = mysqli_query($conn, $duplicateQueryString);
-	$resultLegit = mysqli_query($conn, $legitimateQueryString);
+	$resultDupe  = $conn->query($duplicateQueryString);
+	$resultLegit = $conn->query($legitimateQueryString);
 	if ($resultLegit ->fetch_object()==null){
 		$validityChecker=false;
 		$failString = "Pref Teammate #2 BSAID is invalid";
@@ -66,8 +68,8 @@ if($teammateExist2){
 if($teammateExist3){
 	$duplicateQueryString = "SELECT BSAID FROM usergroup WHERE BSAID LIKE '$Teammate3'";
 	$legitimateQueryString ="SELECT BSAMemberNumber FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate3'"; 
-	$resultDupe  = mysqli_query($conn, $duplicateQueryString);
-	$resultLegit = mysqli_query($conn, $legitimateQueryString);
+	$resultDupe  = $conn->query($duplicateQueryString);
+	$resultLegit = $conn->query($legitimateQueryString);
 
 	if ($resultLegit ->fetch_object()==null){
 		$validityChecker=false;
@@ -76,8 +78,22 @@ if($teammateExist3){
 		$validityChecker=false;
 		$failString = "Pref Teammate #3 BSAID is already in another team";
 	}
+	
 }
-
+if($validityChecker==true){		
+		$sql = 								 "insert into usergroup (BSAID,groupid) values ('$BsaId','$Gname');";
+		if($teammateExist1==true) 	{$sql .= "insert into usergroup (BSAID,groupid) values ('$Teammate1','$Gname');";}
+		if($teammateExist2==true) 	{$sql .= "insert into usergroup (BSAID,groupid) values ('$Teammate2','$Gname');";
+		}
+		if($teammateExist3==true) 	{$sql .= "insert into usergroup (BSAID,groupid) values ('$Teammate3','$Gname');";
+		}
+		$sql .= 							"insert into staffgroups (groupname) values ('$Gname');";
+		if ($conn->multi_query($sql) === TRUE) {
+			//echo "New records created successfully";
+		} else {
+			echo "Error: " . $sql . "<br>" . $conn->error;
+		}
+	}
 $conn->close();
 ?>
 
@@ -104,13 +120,9 @@ $conn->close();
 
     <div id="wrapper-header">
         <div id="logo">
-            <a id="header_0_LogoHyperLink" href="http:\\www.google.com"><img id="header_0_JamboreeLogoImage"
-                                                                             title="Jamboree" src="jamboreelogo.jpg"
-                                                                             style="border-width:0px;"/></a>
-            <a id="header_2_LogoHyperLink" href="http:\\www.google.com"><img id="header_2_BSALogoImage" title="BSA"
-                                                                             src="BSA_Title_Logo.jpg"
-                                                                             style="border-width:0px;float: right"/></a>
-        </div>
+			<a id="header_0_LogoHyperLink" href="http://www.summitbsa.org/events/jamboree/overview/"><img id="header_0_JamboreeLogoImage" title="Jamboree" src="jamboreeLogoNew.jpg" style="border-width:0px;" /></a>
+			<a id="header_2_LogoHyperLink" href="http://www.scouting.org/"><img id="header_2_BSALogoImage" title="BSA" src="BSA_Title_Logo.jpg" style="border-width:0px;float: right" /></a>
+		</div>
     </div>
 
     <div id="wrapper-nav">
