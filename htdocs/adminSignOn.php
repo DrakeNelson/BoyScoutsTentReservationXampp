@@ -87,6 +87,10 @@ if($validator==0){
 							<ul>
 								<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminTentReport.php">Tent Report</a>
 								<br />
+							</ul>
+							<ul>
+								<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="userReport.php">User Report</a>
+								<br />
 							</ul>							
 						</div>
 					</div>
