@@ -12,7 +12,9 @@ $Teammate3 = $_POST["mate3"];
 require_once 'login.php';
 $validityChecker = true;
 $failString = "";
-
+$Teammate1Name;
+$Teammate2Name;
+$Teammate3Name;
 
 $teammateExist1=false;
 $teammateExist2=false;
@@ -37,39 +39,71 @@ if ($conn->connect_error) {
 
 if($teammateExist1){
 	$duplicateQueryString = "SELECT BSAID FROM usergroup WHERE BSAID LIKE '$Teammate1'";
-	$legitimateQueryString ="SELECT BSAMemberNumber FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate1'"; 
+	$legitimateQueryString ="SELECT BSAMemberNumber, Gender, AgeGroup, FirstName, LastName FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate1'";
+	$inTentQueryString ="SELECT BSAID FROM usersintent WHERE BSAID LIKE '$Teammate1';";
 	$resultDupe  = $conn->query($duplicateQueryString);
 	$resultLegit = $conn->query($legitimateQueryString);
-//also needs to check gender
-//also needs to check AttendeeType
+	$resultInTent= $conn->query($inTentQueryString);
 	if ($resultLegit ->fetch_object()==null){
 		$validityChecker=false;
 		$failString = "Pref Teammate #1 BSAID is invalid";
 	} else if($resultDupe->fetch_object()!=null) {
 		$validityChecker=false;
 		$failString = "Pref Teammate #1 BSAID is already in another team";
+	}else if($resultInTent->fetch_object()!=null){
+		$validityChecker=false;
+		$failString = "Pref Teammate #1 has been assigned to a tent contact admin for removal";
+	}else{
+		$row = ($conn->query($legitimateQueryString))->fetch_array(MYSQLI_BOTH);
+		if($Gender !=$row[1]){
+			$validityChecker=false;
+			$failString = "fail Only $Gender may bunk with $Gender";
+		}
+		if($BirthDate !=$row[2]){
+			$validityChecker=false;
+			$failString = "fail Only $BirthDate may bunk with $BirthDate";
+		}
+		$Teammate1Name=$row[3] . " " . $row[4];
 	}
 }
 
 if($teammateExist2){
 	$duplicateQueryString = "SELECT BSAID FROM usergroup WHERE BSAID LIKE '$Teammate2'";
-	$legitimateQueryString ="SELECT BSAMemberNumber FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate2'"; 
+	$legitimateQueryString ="SELECT BSAMemberNumber, Gender, AgeGroup, FirstName, LastName FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate2'"; 
 	$resultDupe  = $conn->query($duplicateQueryString);
 	$resultLegit = $conn->query($legitimateQueryString);
+	$inTentQueryString ="SELECT BSAID FROM usersintent WHERE BSAID LIKE '$Teammate2';";
+	$resultInTent= $conn->query($inTentQueryString);
 	if ($resultLegit ->fetch_object()==null){
 		$validityChecker=false;
 		$failString = "Pref Teammate #2 BSAID is invalid";
 	} else if($resultDupe->fetch_object()!=null) {
 		$validityChecker=false;
 		$failString = "Pref Teammate #2 BSAID is already in another team";
+	}else if($resultInTent->fetch_object()!=null){
+		$validityChecker=false;
+		$failString = "Pref Teammate #2 has been assigned to a tent contact admin for removal";
+	}else{
+		$row = ($conn->query($legitimateQueryString))->fetch_array(MYSQLI_BOTH);
+		if($Gender !=$row[1]){
+			$validityChecker=false;
+			$failString = "fail Only $Gender may bunk with $Gender";
+		}
+		if($BirthDate !=$row[2]){
+			$validityChecker=false;
+			$failString = "fail Only $BirthDate may bunk with $BirthDate";
+		}			
+		$Teammate2Name=$row[3] . " " . $row[4];
 	}
 }
 
 if($teammateExist3){
 	$duplicateQueryString = "SELECT BSAID FROM usergroup WHERE BSAID LIKE '$Teammate3'";
-	$legitimateQueryString ="SELECT BSAMemberNumber FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate3'"; 
+	$legitimateQueryString ="SELECT BSAMemberNumber, Gender, AgeGroup, FirstName, LastName FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate3'"; 
 	$resultDupe  = $conn->query($duplicateQueryString);
 	$resultLegit = $conn->query($legitimateQueryString);
+	$inTentQueryString ="SELECT BSAID FROM usersintent WHERE BSAID LIKE '$Teammate3';";
+	$resultInTent= $conn->query($inTentQueryString);
 
 	if ($resultLegit ->fetch_object()==null){
 		$validityChecker=false;
@@ -77,9 +111,23 @@ if($teammateExist3){
 	} else if($resultDupe->fetch_object()!=null) {
 		$validityChecker=false;
 		$failString = "Pref Teammate #3 BSAID is already in another team";
+	}else if($resultInTent->fetch_object()!=null){
+		$validityChecker=false;
+		$failString = "Pref Teammate #3 has been assigned to a tent contact admin for removal";
+	}else{
+		$row = ($conn->query($legitimateQueryString))->fetch_array(MYSQLI_BOTH);
+		if($Gender !=$row[1]){
+			$validityChecker=false;
+			$failString = "fail Only $Gender may bunk with $Gender";
+		}
+		if($BirthDate !=$row[2]){
+			$validityChecker=false;
+			$failString = "fail Only $BirthDate may bunk with $BirthDate";
+		}			
+		$Teammate3Name=$row[3] . " " . $row[4];
 	}
-	
 }
+
 if($validityChecker==true){		
 		$sql = 								 "insert into usergroup (BSAID,groupid) values ('$BsaId','$Gname');";
 		if($teammateExist1==true) 	{$sql .= "insert into usergroup (BSAID,groupid) values ('$Teammate1','$Gname');";}
@@ -149,14 +197,13 @@ $conn->close();
                     <p>You will recieve an email at <?php echo $Email ?> when your request has been processed.</p>
                     <p>You have requested the following members to tent with:
                     <ul>
-                        
-						<li><?php echo $BsaId ?> </li>
+						<li><?php echo $FirstName . " " . $LastName ?> </li>
                         <?php if($teammateExist1): ?>
-						<li><?php echo $Teammate1; ?> </li>
+						<li><?php echo $Teammate1Name; ?> </li>
 						<?php endif; if($teammateExist2): ?>
-                        <li><?php echo $Teammate2; ?> </li>
+                        <li><?php echo $Teammate2Name; ?> </li>
 						<?php endif; if($teammateExist3): ?>
-                        <li><?php echo $Teammate3; ?> </li>
+                        <li><?php echo $Teammate3Name; ?> </li>
 						<?php endif; ?>
                     </ul>
                     </p>

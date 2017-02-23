@@ -67,7 +67,7 @@ if ($conn->connect_error) {
         <div id="left-column">
             <div id="left-element" class="left-element">
 
-                <h3><a id="leftcolumn_0_SectionHeaderHyperLink" href="/Home/BrandGuide.aspx">SideBar</a></h3>
+                <h3><a id="leftcolumn_0_SectionHeaderHyperLink" href="/Home/BrandGuide.aspx">Navigation</a></h3>
 				<ul>
 					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminSignOn.php">Admin Home</a>
 					<br />
@@ -80,6 +80,10 @@ if ($conn->connect_error) {
 					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminTentReport.php">Tent Report</a>
 					<br />
 				</ul>
+				<ul>
+					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="userReport.php">User Report</a>
+					<br />
+				</ul>							
 
             </div>
         </div>

@@ -118,8 +118,11 @@ $date = date('_m_d_Y', time());
 					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminTentReport.php">Tent Report</a>
 					<br />
 				</ul>
-
-            </div>
+				<ul>
+					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="userReport.php">User Report</a>
+					<br />
+				</ul>
+			</div>
         </div>
         <div id="middle-2columnLEFT">
             <div id="breadcrumb">Boy Scouts of America ~ National Jamboree
@@ -131,6 +134,7 @@ $date = date('_m_d_Y', time());
                 <p>
                 <h2>The Following Users Were Added To The Database</h2>
                 <h3>If any of this data appears to be eroneous or does not match column headings of the table contact a system administrator immediately</h3>
+				<p>If a fatal error timeout occurs refresh the page and confirm the resubmission</p>
                 <table class="container">
                     <thead>
                     <tr>
@@ -154,7 +158,18 @@ $date = date('_m_d_Y', time());
 							if($row[0]!='Reg Code'&&$row[0]!=null){
 							$rc=$mysqli->real_escape_string($row[0]);
 							$bs=$mysqli->real_escape_string($row[1]);							
+							
 							$at=$mysqli->real_escape_string($row[2]);
+							$age;
+							if (strpos($at, '16') !== false) {
+								$age="under26";
+							}else if (strpos($at, '26') !== false) {
+								$age="over26";
+							}else if (strpos($at, 'youth') !== false){
+								$age="under26";
+							}else{
+								$age="over26";
+							}
 							$fn=$mysqli->real_escape_string($row[3]);							
 							$ln=$mysqli->real_escape_string($row[4]);
 							$ge=$mysqli->real_escape_string($row[5]);
@@ -166,8 +181,8 @@ $date = date('_m_d_Y', time());
 									
 								} else {
 									$queryStringTwo = "INSERT INTO importedstafferinfotable 
-											(FirstName,LastName,BSAMemberNumber,Gender,AttendeeType,RegCode)
-											VALUES('$fn','$ln','$bs','$ge','$at','$rc')
+											(FirstName,LastName,BSAMemberNumber,Gender,AttendeeType,RegCode,AgeGroup)
+											VALUES('$fn','$ln','$bs','$ge','$at','$rc','$age')
 											ON DUPLICATE KEY UPDATE BSAMemberNumber=BSAMemberNumber";
 									if ($mysqli->query($queryStringTwo) === TRUE) {
 									

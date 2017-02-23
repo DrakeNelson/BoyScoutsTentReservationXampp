@@ -75,7 +75,7 @@ if($validator==0){
 					<div id="left-column">
 						<div id="left-element" class="left-element">
 
-							<h3><a id="leftcolumn_0_SectionHeaderHyperLink" href="/Home/BrandGuide.aspx">SideBar</a></h3>
+							<h3><a id="leftcolumn_0_SectionHeaderHyperLink" href="/Home/BrandGuide.aspx">Navigation</a></h3>
 							<ul>
 								<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminSignOn.php">Admin Home</a>
 								<br />

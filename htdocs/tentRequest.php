@@ -9,7 +9,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 $statusString = "";
-$queryString = "SELECT BSAMemberNumber, RegCode, Gender, FirstName, LastName, AttendeeType, Email FROM importedstafferinfotable WHERE BSAMemberNumber = '$BsaId' AND RegCode = '$JamId'";
+$queryString = "SELECT BSAMemberNumber, RegCode, Gender, FirstName, LastName, AgeGroup, Email FROM importedstafferinfotable WHERE BSAMemberNumber = '$BsaId' AND RegCode = '$JamId'";
 $result =$conn->query($queryString);
 if (!$result->num_rows > 0) {
     $failString = "Fail at main user";
@@ -22,7 +22,7 @@ if (!$result->num_rows > 0) {
 			$gender = $row[2];
 			$fname  = $row[3];
 			$lname  = $row[4];
-			$dob    = $row[5];
+			$dob    = $conn->real_escape_string($row[5]);
 			$Email  = $row[6];
 		}
 	}

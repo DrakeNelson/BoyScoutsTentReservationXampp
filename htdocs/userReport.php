@@ -18,7 +18,6 @@ if ($conn->connect_error) {
 } else {
 //echo "Connected successfully";
 }
-
 ?>
 
 
@@ -36,7 +35,6 @@ if ($conn->connect_error) {
 	<link rel = "stylesheet" href = "buttonstyle.css"type="text/css"/>
 	
     <script type="text/javascript">
-
     </script>
 </head>
 
@@ -65,7 +63,7 @@ if ($conn->connect_error) {
         <div id="left-column">
             <div id="left-element" class="left-element">
 
-                <h3><a id="leftcolumn_0_SectionHeaderHyperLink" href="/Home/BrandGuide.aspx">SideBar</a></h3>
+                <h3><a id="leftcolumn_0_SectionHeaderHyperLink" href="/Home/BrandGuide.aspx">Navigation</a></h3>
 				<ul>
 					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminSignOn.php">Admin Home</a>
 					<br />
@@ -78,6 +76,10 @@ if ($conn->connect_error) {
 					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminTentReport.php">Tent Report</a>
 					<br />
 				</ul>
+				<ul>
+					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="userReport.php">User Report</a>
+					<br />
+				</ul>							
 
             </div>
         </div>
@@ -90,6 +92,18 @@ if ($conn->connect_error) {
                 </h1>
                 <p>
                 <h2>Users</h2>
+				<FORM action="userReport.php" method="POST">
+				Search : <SELECT name="cascade" size="1">
+				<OPTION value="bsaid">BSA ID</option>
+				<OPTION value="firstname">FirstName</option>
+				<OPTION value="lastname">Last Name</option>
+				<OPTION value="tentid">Tent ID</option>	
+				</SELECT>
+				<input type="text" name="searchbar">
+				<input type="submit" value="GO">
+				<br />
+				Sort : <input type="checkbox" name="bsa"> BSA ID <input type="checkbox" name="fn" > First Name <input type="checkbox" name="ln"> Last Name <input type="checkbox" name="tent"> Tent ID
+				<FORM/>
                 <table class="container">
                     <thead>
                     <tr>
@@ -101,7 +115,28 @@ if ($conn->connect_error) {
                     </thead>
                     <tbody>
                     <?php
-					$sql = "SELECT FirstName, LastName, BSAMemberNumber FROM importedstafferinfotable";
+					if(!empty($_POST))
+					{
+						$asdf = $_POST['searchbar'];
+						if($_POST['cascade']="bsaid"){
+							$sql = "SELECT BSAMemberNumber FROM importedstafferinfotable LIKE $asdf";
+							if(isset($_POST['bsa'])){
+								$sql = "SELECT BSAMemberNumber FROM importedstafferinfotable LIKE $asdf ORDER BY BSAMemberNumber";
+							}
+						}
+						if($_POST['cascade']="firstname"){
+							$sql = "SELECT FirstName FROM importedstafferinfotable LIKE $asdf";
+							if(isset($_POST['fn'])){
+								$sql = "SELECT FirstName FROM importedstafferinfotable LIKE $asdf ORDER BY FirstName";
+							}
+						}
+						if($_POST['cascade']="lastname"){
+							$sql = "SELECT LastName FROM importedstafferinfotable LIKE $asdf%";
+							if(isset($_POST['ln'])){
+								$sql = "SELECT LastName FROM importedstafferinfotable LIKE $asdf% ORDER BY LastName";
+							}
+						}
+						//$sql = "SELECT FirstName, LastName, BSAMemberNumber FROM importedstafferinfotable LIKE $_POST['searchbar']%";
                     if ($result = mysqli_query($conn, $sql)) {
                         while ($row = mysqli_fetch_row($result)) { 
 						?>
@@ -119,7 +154,7 @@ if ($conn->connect_error) {
                             </tr>
                             <?php
                         }
-                    }
+                    }}
                     ?>
 
                     </tbody>

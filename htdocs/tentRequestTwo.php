@@ -19,6 +19,7 @@ if ($result = mysqli_query($conn, $queryString)) {
 		$groupCount = $row[0];
 	}
 }
+
 $groupCount+=1;
 $conn->close();
 ?>
