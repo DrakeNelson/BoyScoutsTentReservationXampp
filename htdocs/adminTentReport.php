@@ -123,15 +123,6 @@ if ($conn->connect_error) {
 								</td>
                                 <td>
                                     <?php
-                                            $sqlThree = "SELECT importedstafferinfotable.FirstName, importedstafferinfotable.LastName 
-														FROM importedstafferinfotable JOIN usergroup ON usergroup.BSAID = importedstafferinfotable.BSAMemberNumber 
-														JOIN staffgroups ON staffgroups.groupname = usergroup.groupid  
-														WHERE staffgroups.tentid like '$row[0]'";
-                                            if ($resultThree = mysqli_query($conn, $sqlThree)) {
-                                                while ($rowThree = mysqli_fetch_row($resultThree)) {
-                                                    echo $rowThree[0] . " " . $rowThree[1] . "<br>";
-                                                }
-                                            }
 											$sqlFour = "SELECT importedstafferinfotable.FirstName, importedstafferinfotable.LastName 
 														FROM importedstafferinfotable JOIN usersintent ON usersintent.BSAID = importedstafferinfotable.BSAMemberNumber 
 														WHERE usersintent.tentid like '$row[0]'";
@@ -168,7 +159,6 @@ if ($conn->connect_error) {
                             <?php
                         }
                         mysqli_free_result($result);
-                        mysqli_free_result($resultThree);
                         mysqli_free_result($resultFour);
                     }
                     ?>

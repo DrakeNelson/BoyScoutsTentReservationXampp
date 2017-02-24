@@ -18,6 +18,42 @@ if ($conn->connect_error) {
 } else {
 //echo "Connected successfully";
 }
+// Create your database query
+$query = "SELECT importedstafferinfotable.BSAMemberNumber, importedstafferinfotable.FirstName, importedstafferinfotable.LastName, usersintent.TentID
+			FROM importedstafferinfotable JOIN usersintent ON importedstafferinfotable.BSAMemberNumber=usersintent.BSAID";  
+
+// Execute the database query
+$result = $conn->query($query);
+require_once 'Classes/PHPExcel.php';
+
+// Instantiate a new PHPExcel object
+$objPHPExcel = new PHPExcel(); 
+// Set the active Excel worksheet to sheet 0
+$objPHPExcel->setActiveSheetIndex(0); 
+// Initialise the Excel row number
+$rowCount = 1; 
+
+//set headers
+$objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, "BSAMemberNumber"); 
+$objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, "FirstName"); 
+$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, "LastName"); 
+$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, "TentID"); 
+
+$rowCount = 2;
+while($row = $result->fetch_array()){ 
+	//set values
+	$objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $row['BSAMemberNumber']); 
+	$objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $row['FirstName']); 
+	$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $row['LastName']); 
+	$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $row['TentID']); 
+	$rowCount++; 
+} 
+
+// Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
+$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); 
+// Write the Excel file to filename some_excel_file.xlsx in the current directory
+$objWriter->save('uploads/UserReport.xlsx'); 
+
 ?>
 
 
@@ -91,7 +127,12 @@ if ($conn->connect_error) {
                     Administration
                 </h1>
                 <p>
+				
                 <h2>Users</h2>
+				<p> </p>
+				<a href="/uploads/UserReport.xlsx" download>
+				  <img border="0" src="DownloadXLSX.png" alt="download" width="142" height="142">
+				</a>
 				<FORM action="userReport.php" method="POST">
 				Search : <SELECT name="cascade" size="1">
 				<OPTION value="bsaid">BSA ID</option>

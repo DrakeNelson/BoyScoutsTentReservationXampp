@@ -55,6 +55,21 @@ if ($result = mysqli_query($conn, $sql)) {
 		}
 	}
 }
+$usersInTentSql = "SELECT usergroup.BSAID, staffgroups.groupname 
+					FROM usergroup JOIN staffgroups ON staffgroups.groupname=usergroup.groupid
+					WHERE staffgroups.groupid like '$groupid';";
+$result = $conn->query($usersInTentSql);
+$sql2=" ";
+while($row = $result->fetch_array())
+{
+	$sql2 .= "INSERT INTO usersintent (BSAID, TentID) VALUES ($row[0] , $tentid);";
+}
+
+if ($conn->multi_query($sql2) === TRUE) {
+    //echo "New records created successfully";
+} else {
+    echo "Error: " . $sql2 . "<br>" . $conn->error;
+}
 
 $conn->close();
 
