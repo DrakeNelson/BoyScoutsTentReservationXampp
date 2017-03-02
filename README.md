@@ -9,6 +9,8 @@ update landing page for adminSignOn.php
 
 Add last page for admin - tent placement algorithm and admin info creator
 
+Add Pagination on UserReport and TentReport
+
 if time: alter cookie to hold admin name and alter all tables/inserts to record the admin who made the change
 
 remember to change logon info when moving between databases
