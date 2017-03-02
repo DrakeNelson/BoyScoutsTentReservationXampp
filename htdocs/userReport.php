@@ -20,7 +20,7 @@ if ($conn->connect_error) {
 }
 // Create your database query
 $query = "SELECT importedstafferinfotable.BSAMemberNumber, importedstafferinfotable.FirstName, importedstafferinfotable.LastName, usersintent.TentID
-			FROM importedstafferinfotable JOIN usersintent ON importedstafferinfotable.BSAMemberNumber=usersintent.BSAID";  
+			FROM importedstafferinfotable LEFT JOIN usersintent ON importedstafferinfotable.BSAMemberNumber=usersintent.BSAID";  
 
 // Execute the database query
 $result = $conn->query($query);
@@ -40,19 +40,19 @@ $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, "LastName");
 $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, "TentID"); 
 
 $rowCount = 2;
-while($row = $result->fetch_array()){ 
-	//set values
-	$objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $row['BSAMemberNumber']); 
-	$objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $row['FirstName']); 
-	$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $row['LastName']); 
-	$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $row['TentID']); 
-	$rowCount++; 
-} 
-
-// Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
-$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); 
-// Write the Excel file to filename some_excel_file.xlsx in the current directory
-$objWriter->save('uploads/UserReport.xlsx'); 
+//while($row = $result->fetch_array()){ 
+//	//set values
+//	$objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $row['BSAMemberNumber']); 
+//	$objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $row['FirstName']); 
+//	$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $row['LastName']); 
+//	$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $row['TentID']); 
+//	$rowCount++; 
+//} 
+//
+//// Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
+//$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); 
+//// Write the Excel file to filename some_excel_file.xlsx in the current directory
+//$objWriter->save('uploads/UserReport.xlsx'); 
 
 ?>
 
@@ -139,11 +139,13 @@ $objWriter->save('uploads/UserReport.xlsx');
 				<OPTION value="firstname">FirstName</option>
 				<OPTION value="lastname">Last Name</option>
 				<OPTION value="tentid">Tent ID</option>	
+				
 				</SELECT>
 				<input type="text" name="searchbar">
 				<input type="submit" value="GO">
 				<br />
-				Sort : <input type="checkbox" name="bsa"> BSA ID <input type="checkbox" name="fn" > First Name <input type="checkbox" name="ln"> Last Name <input type="checkbox" name="tent"> Tent ID
+			<!--THIS NEEDS TO BE FIXED	Sort : <input type="checkbox" name="bsa"> BSA ID <input type="checkbox" name="fn" > First Name <input type="checkbox" name="ln"> Last Name <input type="checkbox" name="tent"> Tent ID
+				</br><input type="checkbox" name="inTents"> People In Tents-->
 				<FORM/>
                 <table class="container">
                     <thead>
@@ -156,47 +158,88 @@ $objWriter->save('uploads/UserReport.xlsx');
                     </thead>
                     <tbody>
                     <?php
-					if(!empty($_POST))
-					{
-						$asdf = $_POST['searchbar'];
+        //
+		//			if(!empty($_POST))
+		//			{
+		//				$asdf = $_POST['searchbar'];
+		//				$sql = "SELECT FirstName, LastName, BSAMemberNumber FROM importedstafferinfotable LIKE '$asdf%'";
 						if($_POST['cascade']="bsaid"){
-							$sql = "SELECT BSAMemberNumber FROM importedstafferinfotable LIKE $asdf";
-							if(isset($_POST['bsa'])){
-								$sql = "SELECT BSAMemberNumber FROM importedstafferinfotable LIKE $asdf ORDER BY BSAMemberNumber";
-							}
+							$index="BSAMemberNumber";
 						}
-						if($_POST['cascade']="firstname"){
-							$sql = "SELECT FirstName FROM importedstafferinfotable LIKE $asdf";
-							if(isset($_POST['fn'])){
-								$sql = "SELECT FirstName FROM importedstafferinfotable LIKE $asdf ORDER BY FirstName";
-							}
+						//if(isset($_POST['bsa'])){
+						//	$result.sort
+						//}
+		//					$sql = "SELECT BSAMemberNumber FROM importedstafferinfotable LIKE $asdf";
+		//					if(isset($_POST['bsa'])){
+		//						$query .= " ORDER BY BSAMemberNumber";
+		//					}
+		//				}
+		//				if($_POST['cascade']="firstname"){
+		//					$sql = "SELECT FirstName FROM importedstafferinfotable LIKE '$asdf'";
+		//					if(isset($_POST['fn'])){
+		//						$sql = "SELECT FirstName FROM importedstafferinfotable LIKE '$asdf' ORDER BY FirstName";
+		//					}
+		//				}
+		//				if($_POST['cascade']="lastname"){
+		//					$sql = "SELECT LastName FROM importedstafferinfotable LIKE '$asdf%'";
+		//					if(isset($_POST['ln'])){
+		//						$sql = "SELECT LastName FROM importedstafferinfotable LIKE '$asdf%' ORDER BY LastName";
+		//					}
+		//				}
+		//				//$sql = "SELECT FirstName, LastName, BSAMemberNumber FROM importedstafferinfotable LIKE '$asdf%'";
+        //            if ($result = mysqli_query($conn, $sql)) {
+        //                while ($row = mysqli_fetch_row($result)) { 
+						while($row = $result->fetch_array()){ 
+							//set values
+							$objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $row['BSAMemberNumber']); 
+							$objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $row['FirstName']); 
+							$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $row['LastName']); 
+							$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $row['TentID']); 
+							$rowCount++; 
+						if(isset($_POST['inTents'])){
+							//if($row[$index]==$_POST['searchbar']){
+								if($row['TentID']!=null){
+							?>
+								<tr>
+									<td><?php echo $row['BSAMemberNumber']; ?></td>
+									<td><?php echo $row['FirstName']; ?></td>
+									<td>
+										<?php echo $row['LastName']; ?>
+									</td>
+									<td>
+										<?php
+										echo $row['TentID'];
+										?>
+									</td>
+								</tr>
+								<?php
+									}
+							//}
+							}else{
+								if($row[$index]==$_POST['searchbar']){
+							?>
+								<tr>
+									<td><?php echo $row['BSAMemberNumber']; ?></td>
+									<td><?php echo $row['FirstName']; ?></td>
+									<td>
+										<?php echo $row['LastName']; ?>
+									</td>
+									<td>
+										<?php
+										echo $row['TentID'];
+										?>
+									</td>
+								</tr>
+								<?php
+								}
+							} 
 						}
-						if($_POST['cascade']="lastname"){
-							$sql = "SELECT LastName FROM importedstafferinfotable LIKE $asdf%";
-							if(isset($_POST['ln'])){
-								$sql = "SELECT LastName FROM importedstafferinfotable LIKE $asdf% ORDER BY LastName";
-							}
-						}
-						//$sql = "SELECT FirstName, LastName, BSAMemberNumber FROM importedstafferinfotable LIKE $_POST['searchbar']%";
-                    if ($result = mysqli_query($conn, $sql)) {
-                        while ($row = mysqli_fetch_row($result)) { 
+
+						// Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
+						$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); 
+						// Write the Excel file to filename some_excel_file.xlsx in the current directory
+						$objWriter->save('uploads/UserReport.xlsx'); 
 						?>
-                            <tr>
-                                <td><?php echo $row[2] ?></td>
-                                <td><?php echo $row[0] ?></td>
-                                <td>
-									<?php echo $row[1] ?>
-								</td>
-                                <td>
-                                    <?php
-									echo "to come"
-                                    ?>
-								</td>
-                            </tr>
-                            <?php
-                        }
-                    }}
-                    ?>
 
                     </tbody>
                 </table>
