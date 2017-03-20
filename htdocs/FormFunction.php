@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set("America/Chicago"); 
+
 $BsaId     = $_POST["bsaid"];
 $FirstName = $_POST["fname"];
 $LastName  = $_POST["lname"];
@@ -12,10 +14,9 @@ $Teammate3 = $_POST["mate3"];
 require_once 'login.php';
 $validityChecker = true;
 $failString = "";
-$Teammate1Name;
-$Teammate2Name;
-$Teammate3Name;
-
+$Teammate1Name="";
+$Teammate2Name="";
+$Teammate3Name="";
 $teammateExist1=false;
 $teammateExist2=false;
 $teammateExist3=false;
@@ -54,19 +55,19 @@ if($teammateExist1){
 		$validityChecker=false;
 		$failString = "Pref Teammate #1 has been assigned to a tent contact admin for removal";
 	}else{
-		$row = ($conn->query($legitimateQueryString))->fetch_array(MYSQLI_BOTH);
+		$row111 = ($conn->query($legitimateQueryString));
+		$row=$row111->fetch_array(MYSQLI_BOTH);
 		if($Gender !=$row[1]){
 			$validityChecker=false;
-			$failString = "fail Only $Gender may bunk with $Gender";
+			$failString = "Pref Teammate #1 must be $Gender";
 		}
 		if($BirthDate !=$row[2]){
 			$validityChecker=false;
-			$failString = "fail Only $BirthDate may bunk with $BirthDate";
+			$failString = "Pref Teammate #1 must be  $BirthDate";
 		}
 		$Teammate1Name=$row[3] . " " . $row[4];
 	}
 }
-
 if($teammateExist2){
 	$duplicateQueryString = "SELECT BSAID FROM usergroup WHERE BSAID LIKE '$Teammate2'";
 	$legitimateQueryString ="SELECT BSAMemberNumber, Gender, AgeGroup, FirstName, LastName FROM importedstafferinfotable WHERE BSAMemberNumber LIKE '$Teammate2'"; 
@@ -74,6 +75,7 @@ if($teammateExist2){
 	$resultLegit = $conn->query($legitimateQueryString);
 	$inTentQueryString ="SELECT BSAID FROM usersintent WHERE BSAID LIKE '$Teammate2';";
 	$resultInTent= $conn->query($inTentQueryString);
+
 	if ($resultLegit ->fetch_object()==null){
 		$validityChecker=false;
 		$failString = "Pref Teammate #2 BSAID is invalid";
@@ -84,14 +86,15 @@ if($teammateExist2){
 		$validityChecker=false;
 		$failString = "Pref Teammate #2 has been assigned to a tent contact admin for removal";
 	}else{
-		$row = ($conn->query($legitimateQueryString))->fetch_array(MYSQLI_BOTH);
+		$row111 = ($conn->query($legitimateQueryString));
+		$row=$row111->fetch_array(MYSQLI_BOTH);
 		if($Gender !=$row[1]){
 			$validityChecker=false;
-			$failString = "fail Only $Gender may bunk with $Gender";
+			$failString = "Pref Teammate #2 must be $Gender";
 		}
 		if($BirthDate !=$row[2]){
 			$validityChecker=false;
-			$failString = "fail Only $BirthDate may bunk with $BirthDate";
+			$failString = "Pref Teammate #2 must be  $BirthDate";
 		}			
 		$Teammate2Name=$row[3] . " " . $row[4];
 	}
@@ -115,32 +118,72 @@ if($teammateExist3){
 		$validityChecker=false;
 		$failString = "Pref Teammate #3 has been assigned to a tent contact admin for removal";
 	}else{
-		$row = ($conn->query($legitimateQueryString))->fetch_array(MYSQLI_BOTH);
+		$row111 = ($conn->query($legitimateQueryString));
+		$row=$row111->fetch_array(MYSQLI_BOTH);
 		if($Gender !=$row[1]){
 			$validityChecker=false;
-			$failString = "fail Only $Gender may bunk with $Gender";
+			$failString = "Pref Teammate #3 must be $Gender";
 		}
 		if($BirthDate !=$row[2]){
 			$validityChecker=false;
-			$failString = "fail Only $BirthDate may bunk with $BirthDate";
+			$failString = "Pref Teammate #3 must be  $BirthDate";
 		}			
 		$Teammate3Name=$row[3] . " " . $row[4];
 	}
 }
 
 if($validityChecker==true){		
-		$sql = 								 "insert into usergroup (BSAID,groupid) values ('$BsaId','$Gname');";
-		if($teammateExist1==true) 	{$sql .= "insert into usergroup (BSAID,groupid) values ('$Teammate1','$Gname');";}
-		if($teammateExist2==true) 	{$sql .= "insert into usergroup (BSAID,groupid) values ('$Teammate2','$Gname');";
+		$sql = "insert into usergroup (BSAID,groupid) values ('$BsaId','$Gname');";
+			if($conn->query($sql)){
+			// echo "sql executed";
+			}else{
+			echo $conn->error;
+			}
+		//		if($teammateExist1)				{$sql .= "insert into usergroup (BSAID,groupid) values ('$Teammate1','$Gname');";}
+		if($teammateExist2)				{				
+		$sql="insert into usergroup (BSAID,groupid) values ('$Teammate2','$Gname');";
+			if($conn->query($sql)){
+			// echo "sql executed";
+			}else{
+			echo $conn->error;
+			}
 		}
-		if($teammateExist3==true) 	{$sql .= "insert into usergroup (BSAID,groupid) values ('$Teammate3','$Gname');";
+		if($teammateExist1)				{				
+		$sql="insert into usergroup (BSAID,groupid) values ('$Teammate1','$Gname');";
+			if($conn->query($sql)){
+			// echo "sql executed";
+			}else{
+			echo $conn->error;
+			}
 		}
-		$sql .= 							"insert into staffgroups (groupname) values ('$Gname');";
-		if ($conn->multi_query($sql) === TRUE) {
-			//echo "New records created successfully";
-		} else {
-			echo "Error: " . $sql . "<br>" . $conn->error;
+		if($teammateExist3)				{				
+		$sql="insert into usergroup (BSAID,groupid) values ('$Teammate3','$Gname');";
+			if($conn->query($sql)){
+			 //echo "sql executed";
+			}else{
+			echo $conn->error;
+			}
 		}
+		//$sql .= "insert into usergroup (BSAID,groupid) values ('$Teammate2','$Gname');";}
+//		if($teammateExist3)				{$sql .= "insert into usergroup (BSAID,groupid) values ('$Teammate3','$Gname');";}
+		$sql = 						         "insert into staffgroups (groupname) values ('$Gname');";
+			if($conn->query($sql)){
+			 //echo "sql executed";
+			}else{
+			echo $conn->error;
+			}
+			//this is the emailer
+$to      = $Email;
+$subject = 'Tent Mate Reservation Confirmation';
+$headers = 'From: webmaster@21products.com' . "\r\n" .
+    'Reply-To: no respons' . "\r\n" .
+    'X-Mailer: PHP/' . phpversion();
+		// The message email
+		$message = "Hello $FirstName,\r\n\r\nYour requested grouping has been processed and your tent at the 2017 Boy Scouts Jamboree will have the following members:\r\n$Teammate1Name\r\n$Teammate1Name\r\n$Teammate2Name\r\n$Teammate3Name\r\n$FirstName $LastName\r\n\r\n Thank you for using the Tent Reservation System, See you at the Jamboree!";
+       		$message = wordwrap($message, 70, "\r\n");
+
+mail($to, $subject, $message, $headers);
+
 	}
 $conn->close();
 ?>

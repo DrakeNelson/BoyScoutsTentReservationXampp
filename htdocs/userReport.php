@@ -53,7 +53,7 @@ $rowCount = 2;
 //$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); 
 //// Write the Excel file to filename some_excel_file.xlsx in the current directory
 //$objWriter->save('uploads/UserReport.xlsx'); 
-
+date_default_timezone_set("America/Chicago");
 ?>
 
 
@@ -109,7 +109,7 @@ $rowCount = 2;
 					<br />
 				</ul>
 				<ul>
-					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminTentReport.php">Tent Report</a>
+					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminTentReport.php?startIndex=0&indexCount=15">Tent Report</a>
 					<br />
 				</ul>
 				<ul>
@@ -129,14 +129,16 @@ $rowCount = 2;
                 <p>
 				
                 <h2>Users</h2>
-				<p> </p>
+				Click the image below to download an excel spreadsheet of all the users and to which tent they are assigned
 				<a href="/uploads/UserReport.xlsx" download>
 				  <img border="0" src="DownloadXLSX.png" alt="download" width="142" height="142">
 				</a>
 				<FORM action="userReport.php" method="POST">
-				Search : <SELECT name="cascade" size="1">
+				You can use this search feature to pull the tent assignment for any individual.</br>
+				<input type="checkbox" name="inTents"> Show All Members In Tents</br>
+				Search : <SELECT name="cascade" size="1" >
 				<OPTION value="bsaid">BSA ID</option>
-				<OPTION value="firstname">FirstName</option>
+				<OPTION value="firstname">First Name</option>
 				<OPTION value="lastname">Last Name</option>
 				<OPTION value="tentid">Tent ID</option>	
 				
@@ -144,8 +146,7 @@ $rowCount = 2;
 				<input type="text" name="searchbar">
 				<input type="submit" value="GO">
 				<br />
-			<!--THIS NEEDS TO BE FIXED	Sort : <input type="checkbox" name="bsa"> BSA ID <input type="checkbox" name="fn" > First Name <input type="checkbox" name="ln"> Last Name <input type="checkbox" name="tent"> Tent ID
-				</br><input type="checkbox" name="inTents"> People In Tents-->
+			<!--THIS NEEDS TO BE FIXED	Sort : <input type="checkbox" name="bsa"> BSA ID <input type="checkbox" name="fn" > First Name <input type="checkbox" name="ln"> Last Name <input type="checkbox" name="tent"> Tent ID-->
 				<FORM/>
                 <table class="container">
                     <thead>
@@ -163,7 +164,7 @@ $rowCount = 2;
 		//			{
 		//				$asdf = $_POST['searchbar'];
 		//				$sql = "SELECT FirstName, LastName, BSAMemberNumber FROM importedstafferinfotable LIKE '$asdf%'";
-						if($_POST['cascade']="bsaid"){
+						if($_POST['cascade']=="bsaid"){
 							$index="BSAMemberNumber";
 						}
 						//if(isset($_POST['bsa'])){
@@ -174,18 +175,15 @@ $rowCount = 2;
 		//						$query .= " ORDER BY BSAMemberNumber";
 		//					}
 		//				}
-		//				if($_POST['cascade']="firstname"){
-		//					$sql = "SELECT FirstName FROM importedstafferinfotable LIKE '$asdf'";
-		//					if(isset($_POST['fn'])){
-		//						$sql = "SELECT FirstName FROM importedstafferinfotable LIKE '$asdf' ORDER BY FirstName";
-		//					}
-		//				}
-		//				if($_POST['cascade']="lastname"){
-		//					$sql = "SELECT LastName FROM importedstafferinfotable LIKE '$asdf%'";
-		//					if(isset($_POST['ln'])){
-		//						$sql = "SELECT LastName FROM importedstafferinfotable LIKE '$asdf%' ORDER BY LastName";
-		//					}
-		//				}
+		 				if($_POST['cascade']=="firstname"){
+		 					$index="FirstName";
+		 				}
+						if($_POST['cascade']=="lastname"){
+							$index="LastName";
+						}
+						if($_POST['cascade']=="tentid"){
+							$index="TentID";
+						}
 		//				//$sql = "SELECT FirstName, LastName, BSAMemberNumber FROM importedstafferinfotable LIKE '$asdf%'";
         //            if ($result = mysqli_query($conn, $sql)) {
         //                while ($row = mysqli_fetch_row($result)) { 
@@ -216,21 +214,23 @@ $rowCount = 2;
 									}
 							//}
 							}else{
-								if($row[$index]==$_POST['searchbar']){
-							?>
-								<tr>
-									<td><?php echo $row['BSAMemberNumber']; ?></td>
-									<td><?php echo $row['FirstName']; ?></td>
-									<td>
-										<?php echo $row['LastName']; ?>
-									</td>
-									<td>
-										<?php
-										echo $row['TentID'];
-										?>
-									</td>
-								</tr>
-								<?php
+								if(isset($_POST['searchbar'])){
+								if(strtolower($row[$index])==strtolower($_POST['searchbar'])){
+								?>
+									<tr>
+										<td><?php echo $row['BSAMemberNumber']; ?></td>
+										<td><?php echo $row['FirstName']; ?></td>
+										<td>
+											<?php echo $row['LastName']; ?>
+										</td>
+										<td>
+											<?php
+											echo $row['TentID'];
+											?>
+										</td>
+									</tr>
+									<?php
+									}
 								}
 							} 
 						}

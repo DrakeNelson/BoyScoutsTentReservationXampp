@@ -1,5 +1,8 @@
 /* `Basic HTML
 ----------------------------------------------------------------------------------------------------*/
+
+#loading_spinner { display:none; }
+
 html, body
 {
     position: relative;
@@ -3706,7 +3709,6 @@ ul.sub
 	  color: #d1ebff;
 }
 
-.container td:first-child { color: #FB667A; }
 
 .container tr:hover {
    background-color: #464A52;

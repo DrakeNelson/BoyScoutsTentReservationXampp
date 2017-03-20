@@ -1,4 +1,6 @@
 <?php
+$startIndex = $_REQUEST['startIndex'];
+$indexCount = $_REQUEST['indexCount'];
 require_once 'login.php';
 $email = $username;
 session_start();
@@ -31,6 +33,7 @@ if ($conn->connect_error) {
     <title>
         Tent Manager
     </title>
+    <link href="w3.css" rel="stylesheet" type="text/css"/>
     <link href="examplecss.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="table.css">
 	<link rel = "stylesheet" href = "buttonstyle.css"type="text/css"/>
@@ -75,7 +78,7 @@ if ($conn->connect_error) {
 					<br />
 				</ul>
 				<ul>
-					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminTentReport.php">Tent Report</a>
+					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminTentReport.php?startIndex=0&indexCount=15">Tent Report</a>
 					<br />
 				</ul>
 				<ul>
@@ -94,20 +97,50 @@ if ($conn->connect_error) {
                 </h1>
                 <p>
                 <h2>Assign Users To Tents</h2>
+
+					<div class="w3-center">
+					<div class="w3-bar w3-border">
+					  <a href="adminTentReport.php?startIndex=<?php if($startIndex<=$indexCount){echo "0";}else{echo $startIndex-$indexCount;}?>&indexCount=<?php echo $indexCount;?>" class="w3-button">&laquo;</a>
+
+					  <?php 
+					  $sqlTentCount = "SELECT COUNT(*) FROM tent";
+					  $resultForTentCount = $conn->query($sqlTentCount);
+					  $tentCount=$resultForTentCount->fetch_array(MYSQLI_BOTH);
+					  ?>
+					  <a href="adminTentReport.php?startIndex=<?php 
+						if($startIndex+$indexCount<=$tentCount[0]){
+							$newIndex=$startIndex+$indexCount;
+							echo $newIndex;
+						}else{
+							echo $startIndex;
+						}?>
+						&indexCount=<?php echo $indexCount;?>" class="w3-button">&raquo;</a>
+					</div>
+					</br>
+					<div class="w3-center"><div class="w3-dropdown-hover">
+					<button class="w3-button">  Number Of Results  </button>
+					<div class="w3-dropdown-content w3-bar-block w3-border">
+					  <a href="adminTentReport.php?startIndex=<?php echo $startIndex;?>&indexCount=<?php echo 15;?>" class="w3-bar-item w3-button">15</a>
+					  <a href="adminTentReport.php?startIndex=<?php echo $startIndex;?>&indexCount=<?php echo 25;?>" class="w3-bar-item w3-button">25</a>
+					  <a href="adminTentReport.php?startIndex=<?php echo $startIndex;?>&indexCount=<?php echo 50;?>" class="w3-bar-item w3-button">50</a>
+					  <a href="adminTentReport.php?startIndex=<?php echo $startIndex;?>&indexCount=<?php echo 100;?>" class="w3-bar-item w3-button">100</a>
+					</div>
+				</div></div>
+					</div>
                 <table class="container">
                     <thead>
                     <tr>
-                        <th><h1 style="color:#ddeeff;">Tent ID</h1></th>
-                        <th><h1 style="color:#ddeeff;"># Of Members</h1></th>
-                        <th><h1 style="color:#ddeeff;">Is Full?</h1></th>
-                        <th><h1 style="color:#ddeeff;">Group Members</h1></th>
-                        <th><h1 style="color:#ddeeff;">Assign Group</h1></th>
-						<th><h1 style="color:#ddeeff;">Remove A Member</h1></th>
+                        <th><h1 style="color:#ddeeff;">Tent Number</h1></th>
+                        <th><h1 style="color:#ddeeff;">Member Count</h1></th>
+                        <th><h1 style="color:#ddeeff;">Status</h1></th>
+                        <th><h1 style="color:#ddeeff;">Members</h1></th>
+                        <th><h1 style="color:#ddeeff;">Assign</h1></th>
+						<th><h1 style="color:#ddeeff;">Remove</h1></th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php
-					$sql = "SELECT tentid, NumberOfMembers, IsFull FROM tent";
+					$sql = "SELECT tentid, NumberOfMembers, IsFull FROM tent LIMIT $startIndex,$indexCount";
                     if ($result = mysqli_query($conn, $sql)) {
                         while ($row = mysqli_fetch_row($result)) { 
 						?>
@@ -123,19 +156,24 @@ if ($conn->connect_error) {
 								</td>
                                 <td>
                                     <?php
-											$sqlFour = "SELECT importedstafferinfotable.FirstName, importedstafferinfotable.LastName 
+											$gender="0";
+											$ageGroup="0";
+											$sqlFour = "SELECT importedstafferinfotable.FirstName, importedstafferinfotable.LastName,importedstafferinfotable.Gender,importedstafferinfotable.AgeGroup
 														FROM importedstafferinfotable JOIN usersintent ON usersintent.BSAID = importedstafferinfotable.BSAMemberNumber 
 														WHERE usersintent.tentid like '$row[0]'";
                                             if ($resultFour = mysqli_query($conn, $sqlFour)) {
                                                 while ($rowFour = mysqli_fetch_row($resultFour)) {
                                                     echo $rowFour[0] . " " . $rowFour[1] . "<br>";
+													$gender=$rowFour[2];
+													$ageGroup=$rowFour[3];
                                                 }
                                             }
+											
                                     ?>
 								</td>
                                 <td>
 									<?php if ($row[2] == 0) { ?>
-                                    <button onclick="assignFunction(value)" value = <?php echo $row[0] ?>>Assign</button>
+                                    <button onclick="assignFunction(value)" value = <?php echo $row[0] ?>&gender=<?php echo $gender?>&ageGroup=<?php echo $ageGroup?>>Assign</button>
 									<script>
 										var myWindow;
 										function assignFunction(value) {
@@ -165,8 +203,20 @@ if ($conn->connect_error) {
 
                     </tbody>
                 </table>
+			<p>                          
+				<div class="w3-center"><h2>This function is irreversible and will assign every member not yet assigned.</br></h2>
+				Use this function only once.  Users will be unable to request any new groups after.</br>
+				<button class="w3-button w3-orange w3-round-xxlarge" onclick="allocateAll()" ?>Assign All Members</button></div>
+					<script>
+						var myWindow;
+						function allocateAll() {
+							myWindow = window.open("AdminAlocateAll.php", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=500,height=500");
+						}
+					</script>
+				</p>
                 </p>
             </div>
+
         </div>
     </div>
     <div id="footer">

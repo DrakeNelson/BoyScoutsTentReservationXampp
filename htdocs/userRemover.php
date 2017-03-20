@@ -1,4 +1,13 @@
 <?php
+session_start();
+if(isset($_SESSION['checker'])){
+	$checker=$_SESSION['checker'];
+}
+$counter = 0;
+if($checker==0){
+	header('Location: admin.php');
+	exit();
+}
 $bsaid = $_REQUEST['BSAID'];
 $tentid = $_REQUEST['tentid'];
 $checker = 1;

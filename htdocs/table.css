@@ -20,12 +20,12 @@
 	  color: #d1ebff;
 	  margin: 0 auto;
   display: table;
-  padding: 0 0 8em 0;
+  padding: 0 0 3em 0;
 }
 
 .container td, .container th {
     color: #d1ebff;
-    padding: 1% 1% 2%;
+    padding: 1% 1% 0%;
 }
 
 /* Background-color of the odd rows */
@@ -54,7 +54,6 @@
 	  color: #d1ebff;
 }
 
-.container td:first-child { color: #FB667A; }
 
 .container tr:hover, .container input:hover {
    background-color: #464A52;

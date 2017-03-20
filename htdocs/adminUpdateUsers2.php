@@ -4,6 +4,7 @@ $email = $username;
 session_start();
 date_default_timezone_set("America/Chicago"); 
 
+
 if(isset($_SESSION['checker'])){
 	$checker=$_SESSION['checker'];
 }
@@ -77,7 +78,7 @@ if ($conn->connect_error) {
 					<br />
 				</ul>
 				<ul>
-					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminTentReport.php?startIndex=0&indexCount=15">Tent Report</a>
+					<a id="leftcolumn_0_CategoryRepeater_ctl00_CategoryHyperLink" href="adminTentReport.php">Tent Report</a>
 					<br />
 				</ul>
 				<ul>
@@ -105,8 +106,6 @@ if ($conn->connect_error) {
 				The columns of the excel file should be the following IN ORDER: <br>
 				Registration Code, BSA Member Number, Attendee Type, First Name, Last Name, Gender<br>
 				No extra columns can be read, it doesnt matter what the headers are called or if they exist but these must be in order.<br>
-				Valid Values for Gender: Male, Female<br>
-				Valid Values for Attendee Type: International Staff 26+, Staff 26+, Staff 16-25, Scouting Youth Participant, Scouting Adult Leader<br>
 				<img src="sampleExcelFile.png" alt="Sample XLS File">
 					<form action="adminUploadNewUsers.php" method="post" enctype="multipart/form-data">
 						Select .xls file:

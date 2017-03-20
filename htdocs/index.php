@@ -7,6 +7,7 @@
 		</title>
 		<link href="examplecss.css" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="form-basic.css">
+		<link href="Content/bootstrap.css"rel="stylesheet"/>
 		<script type="text/javascript">
 
 		</script>

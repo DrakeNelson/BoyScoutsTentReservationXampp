@@ -1,4 +1,13 @@
 <?php
+session_start();
+if(isset($_SESSION['checker'])){
+	$checker=$_SESSION['checker'];
+}
+$counter = 0;
+if($checker==0){
+	header('Location: admin.php');
+	exit();
+}
 $groupid = $_REQUEST['groupid'];
 $tentid = $_REQUEST['tentid'];
 $checker = 1;
@@ -59,17 +68,18 @@ $usersInTentSql = "SELECT usergroup.BSAID, staffgroups.groupname
 					FROM usergroup JOIN staffgroups ON staffgroups.groupname=usergroup.groupid
 					WHERE staffgroups.groupid like '$groupid';";
 $result = $conn->query($usersInTentSql);
-$sql2=" ";
+
 while($row = $result->fetch_array())
 {
-	$sql2 .= "INSERT INTO usersintent (BSAID, TentID) VALUES ($row[0] , $tentid);";
+	$sql2 = "INSERT INTO usersintent (BSAID, TentID) VALUES ($row[0] , $tentid);";
+	if ($conn->query($sql2) === TRUE) {
+    //echo "New records created successfully";
+	} else {
+		echo "Error: " . $sql2 . "<br>" . $conn->error;
+	}
 }
 
-if ($conn->multi_query($sql2) === TRUE) {
-    //echo "New records created successfully";
-} else {
-    echo "Error: " . $sql2 . "<br>" . $conn->error;
-}
+
 
 $conn->close();
 

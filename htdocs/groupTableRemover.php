@@ -1,4 +1,13 @@
 <?php
+session_start();
+if(isset($_SESSION['checker'])){
+	$checker=$_SESSION['checker'];
+}
+$counter = 0;
+if($checker==0){
+	header('Location: admin.php');
+	exit();
+}
 $tentid = $_REQUEST['tentid'];
 require_once 'login.php';
 $email = $username;
@@ -50,31 +59,6 @@ $sqlForGroups = "SELECT importedstafferinfotable.BSAMemberNumber, importedstaffe
 		</tr>
 		</thead>
 		<tbody>
-		<?php
-		if ($resultForGroups = mysqli_query($conn, $sqlForGroups)) {
-			while ($rowForTent = mysqli_fetch_row($resultForGroups)) {
-		?>
-			<tr>
-				<td><?php echo $rowForTent[0] ?></td>
-				<td>
-					<?php echo $rowForTent[1] ?></td>
-				<td><?php echo $rowForTent[2] ?></td>
-				<td>
-				<?php if (true==true) { ?>
-					<button onclick="myFunction(value)" value = <?php echo $rowForTent[0] ?>>Remove</button>
-					<script>
-						function myFunction(value) {
-							myWindow = window.open("userRemover.php?tentid=<?php echo $tentid;?>&BSAID="+value, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=150");
-							myWindow.opener.close();
-						}
-					</script>
-				<?php } ?>
-				</td>
-			</tr>
-			<?php
-			}
-		}
-		?>
 		<?php
 		$sqlForUsers = "SELECT importedstafferinfotable.BSAMemberNumber, importedstafferinfotable.FirstName, importedstafferinfotable.LastName 
 				FROM importedstafferinfotable JOIN usersintent ON importedstafferinfotable.BSAMemberNumber=usersintent.BSAID

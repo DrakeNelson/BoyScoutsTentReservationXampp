@@ -30,7 +30,7 @@ if(isset($_POST["submit"])) {
 }
 // Allow certain file formats
 if($imageFileType != "xls") {
-	header('Location: adminUpdateUsers.php?redirectMsg=1');
+	header('Location: adminUpdateUsers2.php?redirectMsg=1');
 	exit();
 }
 if ($uploadOk != 0) {

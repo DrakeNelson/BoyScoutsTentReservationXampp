@@ -1,5 +1,16 @@
 <?php
+session_start();
+if(isset($_SESSION['checker'])){
+	$checker=$_SESSION['checker'];
+}
+$counter = 0;
+if($checker==0){
+	header('Location: admin.php');
+	exit();
+}
 $tentid = $_REQUEST['tentid'];
+$ageGroup = $_REQUEST['ageGroup'];
+$gender = $_REQUEST['gender'];
 require_once 'login.php';
 $email = $username;
 $checker = 1;
@@ -36,9 +47,7 @@ if ($resultForTent = mysqli_query($conn, $sqlForTent)) {
 		<link href="examplecss.css" rel="stylesheet" type="text/css"/>
 		<link rel="stylesheet" href="table.css"/>
 		<link rel="stylesheet" href="buttonstyle.css"/>
-		<script type="text/javascript">
 
-		</script>
 	</head>
 	<p>
 	<h1  style="color:white;"> TENT: <?php echo $tentid;?></h1>
@@ -60,7 +69,7 @@ if ($resultForTent = mysqli_query($conn, $sqlForTent)) {
 
 		if ($result = mysqli_query($conn, $sql)) {
 			while ($row = mysqli_fetch_row($result)) { 
-			$sqlForGroup = "SELECT COUNT(*) FROM usergroup WHERE groupid LIKE '$row[3]'";
+				$sqlForGroup = "SELECT COUNT(*) FROM usergroup WHERE groupid LIKE '$row[3]'";
 				$groupMemCount=0;
 				if ($resultForGroup = mysqli_query($conn, $sqlForGroup)) {
 					while ($rowForGroup = mysqli_fetch_row($resultForGroup)) {
@@ -68,13 +77,18 @@ if ($resultForTent = mysqli_query($conn, $sqlForTent)) {
 					}
 				}
 				if($groupMemCount<= 4 -$tentMemCount ){
-					
+					$sqlForGenderAndAge = "SELECT importedstafferinfotable.Gender, importedstafferinfotable.AgeGroup
+											FROM importedstafferinfotable JOIN usergroup ON usergroup.BSAID = importedstafferinfotable.BSAMemberNumber 
+											WHERE usergroup.groupid = '$row[3]'";
+					$resultForGenderAndAge = $conn->query($sqlForGenderAndAge);
+					$genderAndAge=$resultForGenderAndAge->fetch_array(MYSQLI_BOTH);
+					if($gender=="0"||($genderAndAge[0]==$gender&&$genderAndAge[1]==$ageGroup)){
 				?>
 				<tr>
 					<td><?php echo $row[0] ?></td>
 					<td>
 						<?php
-							$sqlTwo = "SELECT importedstafferinfotable.FirstName, importedstafferinfotable.LastName 
+							$sqlTwo = "SELECT importedstafferinfotable.FirstName, importedstafferinfotable.LastName
 										FROM importedstafferinfotable JOIN usergroup ON usergroup.BSAID = importedstafferinfotable.BSAMemberNumber 
 										WHERE usergroup.groupid like '$row[3]'";
 							if ($resultTwo = mysqli_query($conn, $sqlTwo)) {
@@ -105,6 +119,7 @@ if ($resultForTent = mysqli_query($conn, $sqlForTent)) {
 					</td>
 				</tr>
 				<?php
+					}
 				}
 			}
 			mysqli_free_result($result);
@@ -128,14 +143,16 @@ if ($resultForTent = mysqli_query($conn, $sqlForTent)) {
 		</thead>
 		<tbody>
 		<?php
-		$sql = "SELECT BSAMemberNumber, FirstName, LastName,Code 
+		$sql = "SELECT BSAMemberNumber, FirstName, LastName,Code,Gender,AgeGroup 
 				FROM importedstafferinfotable 
 				WHERE BSAMemberNumber NOT IN (SELECT BSAID FROM usergroup) 
 				AND BSAMemberNumber NOT IN (SELECT BSAID FROM usersintent)";
 
 		if ($result = mysqli_query($conn, $sql)) {
 			while ($row = mysqli_fetch_row($result)) { 
+					if($gender=="0"||($row[4]==$gender&&$row[5]==$ageGroup)){
 				?>
+
 				<tr>
 					<td>
 						<?php echo $row[0]; ?>
@@ -163,6 +180,7 @@ if ($resultForTent = mysqli_query($conn, $sqlForTent)) {
 					</td>
 				</tr>
 				<?php
+				}
 			}
 			mysqli_free_result($result);
 		}
