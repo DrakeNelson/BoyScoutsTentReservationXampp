@@ -102,7 +102,10 @@ if($validator==0){
 							Administration
 							</h1>
 							<p>
-								<h2>Logged In as Tent Manager</h2>	
+								<a href="adminTentReport.php?startIndex=0&indexCount=15"><img title="tent" src="AdminIcon_Tents.png" /></a>
+								<a href="adminUpdateUsers.php"><img title="tent" src="AdminIcon_Update.png" /></a>
+								<a href="userReport.php"><img title="tent" src="AdminIcon_Staff.png" /></a>
+						
 							</p>
 						</div>
 					</div>

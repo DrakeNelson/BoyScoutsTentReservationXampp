@@ -47,7 +47,12 @@ if($checker==0){
 		</head>
 	<p>
 	<div id="loading_spinner">
-		<h1  style="color:white;"> Loading</h1>
+		
+	
+	</div>
+	
+	<div class="my_update_panel">
+	<h1  style="color:white;"> Loading</h1>
 		<svg id="wrap" width="300" height="300">
 	  
 		  <!-- background -->
@@ -121,10 +126,6 @@ if($checker==0){
 		  </svg>
 		  
 		</svg>
-	
-	</div>
-	
-	<div class="my_update_panel">
 		<h1  style="color:white;"> This can take quite some time, closing this window early will halt progress</h1>
 	</div>
 	</p>
